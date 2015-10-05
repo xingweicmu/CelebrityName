@@ -30,7 +30,7 @@ public class CelebrityName {
 	 */
 	public static void main(String[] args) {
 		CelebrityName test = new CelebrityName();
-		test.play("generated.txt", "output.txt");
+		test.play("names.txt", "output.txt");
 	}
 
 	/**
@@ -126,30 +126,32 @@ public class CelebrityName {
 
 		// For each of the entry in the hashmap, try to find the longest name
 		// chains starting with it, then store them into an arrayList.
-		ArrayList<String> result = new ArrayList<String>();
+		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		for (Map.Entry<String, ArrayList<String>> entry : map.entrySet()) {
 			String key = entry.getKey();
 			ArrayList<String> value = entry.getValue();
-			helper(map, value, new StringBuilder(key), result);
+			ArrayList<String> oneResult = new ArrayList<String>();
+			oneResult.add("");
+			helper(map, value, new StringBuilder(key), oneResult);
+//			System.out.println("!"+key + oneResult);
+			result.add(oneResult);
 		}
-
+			
 		// Go through the arrayList of longest name chains to find the longest
 		// ones, and copy them to maxArray to return.
-		String maxString = "";
-		int max = -1;
-		for (String one : result) {
-//			System.out.println(one);
-			if (one.split(" ").length >= max) {
-				maxString = one;
-				max = one.split(" ").length;
-			}
-		}
 		ArrayList<String> maxArray = new ArrayList<String>();
-		for (String one : result) {
-			if (one.split(" ").length == max) {
-				maxArray.add(one);
+		maxArray.add("");
+		for(ArrayList<String> each: result) {
+			if(each.get(0).split(" ").length > maxArray.get(0).split(" ").length){
+				maxArray = each;
+			}
+			else if(each.get(0).split(" ").length == maxArray.get(0).split(" ").length){
+				maxArray.addAll(each);
 			}
 		}
+//		System.out.println("Reuslt:"+maxArray);
+		// Special Handling for empty input 
+		if(maxArray.get(0).length() == 0) maxArray.clear();
 		return maxArray;
 	}
 
@@ -164,7 +166,7 @@ public class CelebrityName {
 	 * @param sb
 	 *            the StringBuilder for the first name
 	 * @param result
-	 *            the arrayList containing all the name chains
+	 *            the arrayList containing the longest name chains
 	 */
 	public void helper(Map<String, ArrayList<String>> map, ArrayList<String> array, StringBuilder sb,
 			ArrayList<String> result) {
@@ -178,10 +180,17 @@ public class CelebrityName {
 				helper(map, map.get(s), sb, result);
 			} else {
 				lastStatus = sb.toString();
-				if (!lastStatus.contains(s))	// To avoid circle in name chain
+				// To avoid circle in name chain
+				if (!lastStatus.contains(s))	
 					sb.append(" " + s);
-//				System.out.println(sb.toString());
-				result.add(sb.toString());	//TODO
+
+				// Only save the longest name chain
+				if(result.get(0).split(" ").length < sb.toString().split(" ").length){
+					result.clear();
+					result.add(sb.toString());	
+				} else if(result.get(0).split(" ").length == sb.toString().split(" ").length) {
+					result.add(sb.toString());	
+				}
 			}
 		}
 	}

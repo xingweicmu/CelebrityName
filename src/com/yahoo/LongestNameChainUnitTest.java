@@ -26,7 +26,7 @@ public class LongestNameChainUnitTest extends TestCase {
 	@Test
 	public void testFindLongestNameChainWithEmptyArray() {
 		CelebrityName test = new CelebrityName();
-		String[] testSet = new String[] {};
+		String[] testSet = new String[]{};
 		ArrayList<String> result = test.findLongestNameChain(testSet);
 		assertEquals(0, result.size());
 	}
@@ -48,13 +48,23 @@ public class LongestNameChainUnitTest extends TestCase {
 	}
 
 	@Test
-	public void testFindLongestNameWithTwoChainArray() {
+	public void testFindLongestNameWithTwoChainArray1() {
 		CelebrityName test = new CelebrityName();
 		String[] testSet = new String[] { "Elton John", "John Lennon", "Lennon James", "Lennon Taylor" };
 		ArrayList<String> result = test.findLongestNameChain(testSet);
 		// Found the error here
 		assertEquals("Elton John Lennon James", result.get(0));
 		assertEquals("Elton John Lennon Taylor", result.get(1));
+	}
+	
+	@Test
+	public void testFindLongestNameWithTwoChainArray2() {
+		CelebrityName test = new CelebrityName();
+		String[] testSet = new String[] { "Elton John", "John Lennon", "A B", "B C" };
+		ArrayList<String> result = test.findLongestNameChain(testSet);
+		// Found the error here
+		assertEquals("Elton John Lennon", result.get(1));
+		assertEquals("A B C", result.get(0));
 
 	}
 
